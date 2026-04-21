@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DistilBERT as a Compute-Efficient Pair-Preference Reward Model</title>
+  <meta name="description" content="Small-scale RLHF reward model result: DistilBERT attains 0.6239 ± 0.0054 pair-preference accuracy on Anthropic/hh-rlhf helpful-base.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>DistilBERT as a Compute-Efficient Pair-Preference Reward Model</h1>
+      <p class="authors">Vikash</p>
+      <nav class="cta">
+        <a href="paper.pdf">Paper (PDF)</a>
+        <a href="https://github.com/Vizuara-AI-Lab/paper-distilbert-reward-model-f20f">Code</a>
+      </nav>
+    </header>
+
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <ul>
+        <li>Reward modeling is the central supervised step of RLHF-based alignment, yet most published reward models target frontier-scale backbones.</li>
+        <li>We ask whether a 66M-parameter distilled encoder can produce a useful pair-preference signal on standard human-preference data.</li>
+        <li>Fine-tuning <code>distilbert-base-uncased</code> on 2&thinsp;000 pairs from <code>Anthropic/hh-rlhf</code> (helpful-base) with a Bradley&ndash;Terry objective yields <strong>pair-preference accuracy 0.6239 &plusmn; 0.0054</strong> across three seeds on a 500-pair held-out split.</li>
+        <li>The result suggests small encoders are a viable reward-model baseline for compute-constrained alignment research and deployed preference filters.</li>
+      </ul>
+    </section>
+
+    <section id="hero">
+      <figure>
+        <img src="figures/architecture.png" alt="Reward-model architecture: DistilBERT encoder with a scalar reward head, trained with a pair-preference Bradley-Terry loss." loading="lazy">
+        <figcaption>DistilBERT encoder with a scalar reward head, trained with a pair-preference Bradley&ndash;Terry loss.</figcaption>
+      </figure>
+    </section>
+
+    <section id="method">
+      <h2>How it works</h2>
+      <p>Each training example is a pair &mdash; a prompt plus two candidate responses, one preferred by a human (the &ldquo;chosen&rdquo; response) and one not (&ldquo;rejected&rdquo;). Both the prompt+chosen and prompt+rejected passes through a shared DistilBERT encoder, and a single linear head turns the <code>[CLS]</code> hidden state into a scalar &ldquo;reward.&rdquo; We train the model to assign a higher reward to the chosen response via the Bradley&ndash;Terry objective <code>&minus;log &sigma;(r<sub>chosen</sub> &minus; r<sub>rejected</sub>)</code>. At test time we check how often the model&rsquo;s reward agrees with the human preference &mdash; that fraction is the reported pair-preference accuracy.</p>
+    </section>
+
+    <section id="results">
+      <h2>What we found</h2>
+      <p>Across three seeds on a held-out 500-pair split of <code>Anthropic/hh-rlhf</code> (helpful-base), the 66M-parameter DistilBERT reward model reaches <strong>62.39 &plusmn; 0.54%</strong> pair-preference accuracy (seed range 0.6172&ndash;0.6305). Test accuracy rises monotonically across all three epochs for every seed, and cross-seed relative variance stays under 1% &mdash; training is stable at this scale.</p>
+      <figure>
+        <img src="figures/learning-curves.png" alt="Line plot of pair-preference accuracy vs. epoch for 3 seeds plus a bold mean line; all three seeds climb monotonically and finish tight around 0.62-0.63, well above the 0.5 random baseline." loading="lazy">
+        <figcaption>Test accuracy vs. epoch (3 seeds). Light lines: per-seed curves. Bold line: mean. Dashed line: 50% random baseline.</figcaption>
+      </figure>
+    </section>
+
+    <section id="context">
+      <h2>Where this sits in an RLHF pipeline</h2>
+      <figure>
+        <img src="figures/rlhf-pipeline.png" alt="Three-stage RLHF alignment pipeline: Stage 1 Supervised Fine-Tuning, Stage 2 Reward Modeling (highlighted), Stage 3 PPO policy optimization." loading="lazy">
+        <figcaption>The reward model is the middle stage of the three-stage RLHF recipe; this work targets Stage 2.</figcaption>
+      </figure>
+    </section>
+
+    <section id="citation">
+      <h2>Cite</h2>
+      <pre><code>@misc{vikash2026distilbertreward,
+  title  = {DistilBERT as a Compute-Efficient Pair-Preference Reward Model},
+  author = {Vikash},
+  year   = {2026},
+  url    = {https://github.com/Vizuara-AI-Lab/paper-distilbert-reward-model-f20f}
+}</code></pre>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 Vikash &middot; Source: <a href="https://github.com/Vizuara-AI-Lab/paper-distilbert-reward-model-f20f">GitHub</a></p>
+    </footer>
+  </main>
+</body>
+</html>
