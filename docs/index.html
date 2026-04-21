@@ -23,12 +23,7 @@
 
     <section id="abstract">
       <h2>Abstract</h2>
-      <ul>
-        <li>Reward modeling is the central supervised step of RLHF-based alignment, yet most published reward models target frontier-scale backbones.</li>
-        <li>We ask whether a 66M-parameter distilled encoder can produce a useful pair-preference signal on standard human-preference data.</li>
-        <li>Fine-tuning <code>distilbert-base-uncased</code> on 2&thinsp;000 pairs from <code>Anthropic/hh-rlhf</code> (helpful-base) with a Bradley&ndash;Terry objective yields <strong>pair-preference accuracy 0.6239 &plusmn; 0.0054</strong> across three seeds on a 500-pair held-out split.</li>
-        <li>The result suggests small encoders are a viable reward-model baseline for compute-constrained alignment research and deployed preference filters.</li>
-      </ul>
+      <p>Reward modeling is the supervised stage that converts a corpus of human preferences over candidate responses into a scalar signal suitable for reinforcement-learning fine-tuning of language models. Published reward-model results are almost exclusively reported with backbones of a billion parameters or more, leaving the lower end of the compute curve &mdash; where a small distilled encoder might still offer a useful preference signal &mdash; largely uncharacterized. We ask how far this compute curve descends: we fine-tune <code>distilbert-base-uncased</code>, a 66M-parameter distilled BERT model, as a pair-preference reward model on a 2&thinsp;000-pair subset of <code>Anthropic/hh-rlhf</code> helpful-base under a Bradley&ndash;Terry objective. Across three seeds, the model attains pair-preference accuracy <strong>0.6239 &plusmn; 0.0054</strong> on a 500-pair held-out split, comfortably above the 0.50 random baseline and with relative cross-seed variance below one percent. The result suggests that small distilled encoders can serve as a practical reward-modeling baseline for compute-constrained alignment research and as a cheap preference filter in deployed systems.</p>
     </section>
 
     <section id="hero">
