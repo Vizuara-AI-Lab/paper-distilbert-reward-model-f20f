@@ -30,3 +30,5 @@
 [2026-04-21T08:51:20Z] stage-10.1 recommend-venues status=pass summary="3 conferences + 2 journals; SafeAI Workshop + TMLR are the strongest current-scope fits"
 [2026-04-21T08:51:22Z] stage-10.2 venue-format status=skip summary="no target_venue_style set"
 [2026-04-21T08:51:25Z] orchestrator pipeline-status=paused-before-stage-11 reason="create-repo + build-site + email-draft require explicit user confirmation (real-world side effects)"
+[2026-04-21T09:00:00Z] stage-11.1 create-repo status=partial owner=Vizuara-AI-Lab name=paper-distilbert-reward-model-f20f summary="local git snapshot committed (47fc8eb, 8MiB); GitHub creation blocked by org permission — see output/PUSH_INSTRUCTIONS.md"
+[2026-04-21T09:05:00Z] stage-11.1 create-repo status=pass owner=VikashChandraMishra name=paper-distilbert-reward-model-f20f url=https://github.com/VikashChandraMishra/paper-distilbert-reward-model-f20f visibility=private summary="direct personal-account publish; no org involvement"

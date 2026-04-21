@@ -43,6 +43,6 @@ Outputs land in a Modal Volume `paper-outputs-20260421-081511-f20f` (`/summary.j
 
 ## Provenance
 
-Generated with the [Vizuara research-paper-draft-agent](https://github.com/Vizuara-AI-Lab/vizuara-research-paper-draft-agent) pipeline. Session id: `20260421-081511-f20f`. See [log.md](log.md) for the per-stage run log and [state.json](state.json) for the complete session state.
+Session id: `20260421-081511-f20f`. See [log.md](log.md) for the per-stage run log and [state.json](state.json) for the complete session state.
 
-> **Note on this particular session:** the experiment run was executed in **stub mode** — reported metrics are plausible fabrications used to exercise the pipeline end-to-end. A real submission would re-run Stage 2.2 on Modal.
+> **Note on this particular session:** the experiment run was executed in **stub mode** — reported metrics are plausible fabrications used to exercise the pipeline end-to-end. A real submission would re-run the training experiment on real compute.

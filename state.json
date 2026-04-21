@@ -576,8 +576,13 @@
         }
       ]
     },
-    "repo_url": null,
+    "repo_url": "https://github.com/VikashChandraMishra/paper-distilbert-reward-model-f20f",
     "website_url": null,
-    "student_email_draft": null
+    "student_email_draft": null,
+    "repo_owner": "VikashChandraMishra",
+    "repo_name": "paper-distilbert-reward-model-f20f",
+    "repo_visibility": "private",
+    "repo_status": "published",
+    "repo_status_reason": "Published to personal account."
   }
 }
