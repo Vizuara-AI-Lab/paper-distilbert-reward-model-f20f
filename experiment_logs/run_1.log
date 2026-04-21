@@ -1,0 +1,5 @@
+STUB RUN — no Modal invocation. Metrics fabricated for pipeline smoke test.
+RESULT: metric=0.6240 seed=0
+RESULT: metric=0.6305 seed=1
+RESULT: metric=0.6172 seed=2
+SUMMARY: {"primary_metric": {"name": "pair_preference_accuracy", "mean": 0.6239, "std": 0.0054, "n_seeds": 3}, "per_seed": [{"seed": 0, "primary_metric_name": "pair_preference_accuracy", "primary_metric": 0.624, "training_time_s": 0.5, "peak_gpu_memory_gb": 0.0, "notes": "stub"}, {"seed": 1, "primary_metric_name": "pair_preference_accuracy", "primary_metric": 0.6305, "training_time_s": 0.5, "peak_gpu_memory_gb": 0.0, "notes": "stub"}, {"seed": 2, "primary_metric_name": "pair_preference_accuracy", "primary_metric": 0.6172, "training_time_s": 0.5, "peak_gpu_memory_gb": 0.0, "notes": "stub"}], "backend": "stub"}

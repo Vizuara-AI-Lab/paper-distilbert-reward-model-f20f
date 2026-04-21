@@ -1,0 +1,18 @@
+# Rendered audit pages (heavy, regenerable via scripts/pdf_render.py)
+audit/
+
+# LaTeX intermediates (keep .tex, .bib, .pdf)
+tex/*.aux
+tex/*.log
+tex/*.out
+tex/*.bbl
+tex/*.blg
+tex/*.synctex.gz
+
+# Python
+__pycache__/
+*.pyc
+
+# Secrets (defensive — shouldn't be here anyway)
+.env
+.env.*

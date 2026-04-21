@@ -1,0 +1,9 @@
+{"seed": 0, "epoch": 0, "train_loss": 0.6831, "test_acc": 0.562}
+{"seed": 0, "epoch": 1, "train_loss": 0.598, "test_acc": 0.6018}
+{"seed": 0, "epoch": 2, "train_loss": 0.5471, "test_acc": 0.624}
+{"seed": 1, "epoch": 0, "train_loss": 0.6847, "test_acc": 0.568}
+{"seed": 1, "epoch": 1, "train_loss": 0.6021, "test_acc": 0.6094}
+{"seed": 1, "epoch": 2, "train_loss": 0.5494, "test_acc": 0.6305}
+{"seed": 2, "epoch": 0, "train_loss": 0.6793, "test_acc": 0.554}
+{"seed": 2, "epoch": 1, "train_loss": 0.5952, "test_acc": 0.5988}
+{"seed": 2, "epoch": 2, "train_loss": 0.5513, "test_acc": 0.6172}

@@ -1,0 +1,25 @@
+{
+  "run_id": "run_20260421_145506_159dc6",
+  "timestamp": "2026-04-21T14:57:10.618049",
+  "vlm_provider": "gemini",
+  "vlm_model": "gemini-2.5-flash",
+  "image_provider": "google_imagen",
+  "image_model": "gemini-3-pro-image-preview",
+  "refinement_iterations": 1,
+  "seed": null,
+  "config_snapshot": {
+    "vlm_provider": "gemini",
+    "vlm_model": "gemini-2.5-flash",
+    "image_provider": "google_imagen",
+    "image_model": "gemini-3-pro-image-preview",
+    "num_retrieval_examples": 10,
+    "refinement_iterations": 1,
+    "output_resolution": "2k",
+    "reference_set_path": "data/reference_sets",
+    "guidelines_path": "data/guidelines",
+    "output_dir": "sessions\\20260421-081511-f20f\\output\\figures",
+    "save_iterations": true,
+    "openrouter_api_key": null,
+    "skip_ssl_verification": false
+  }
+}

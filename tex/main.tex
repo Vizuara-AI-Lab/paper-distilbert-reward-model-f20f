@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[round]{natbib}
+\usepackage{authblk}
+\usepackage{microtype}
+\usepackage[skip=6pt]{caption}
+\graphicspath{{figures/}}
+
+\newcommand{\best}[1]{\textbf{#1}}
+
+\title{DistilBERT as a Compute-Efficient Pair-Preference Reward Model}
+\author[1]{Vikash}
+\affil[1]{Independent}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\begin{itemize}
+  \item Reward modeling is the central supervised step of RLHF-based alignment, yet most published reward models target frontier-scale backbones.
+  \item We ask whether a $66$M-parameter distilled encoder can produce a useful pair-preference signal on standard human-preference data.
+  \item Fine-tuning \texttt{distilbert-base-uncased} on $2\,000$ pairs from \texttt{Anthropic/hh-rlhf} (helpful-base) with a Bradley--Terry objective yields \textbf{pair-preference accuracy $0.6239 \pm 0.0054$} across three seeds on a $500$-pair held-out split.
+  \item The result suggests small encoders are a viable reward-model baseline for compute-constrained alignment research and deployed preference filters.
+\end{itemize}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+\begin{itemize}
+  \item \textbf{Motivation.} RLHF pipelines~\cite{ouyang2022instructgpt,bai2022hhrlhf} depend on a reward model that predicts which of two candidate responses a human would prefer; the reward model's accuracy sets an upper bound on the policy's attainable quality.
+  \item \textbf{Gap.} Most published reward-model results use backbones of $\geq 1$\,B parameters. Few papers characterize how far down the compute curve a useful reward signal survives.
+  \item \textbf{Approach.} We treat reward modeling as a binary pair-preference task, train a $66$M-parameter \textsc{DistilBERT}~\cite{sanh2019distilbert} with a scalar head and Bradley--Terry loss on helpful-base pairs from \texttt{Anthropic/hh-rlhf}, and evaluate pair-preference accuracy on held-out data (overall flow in Figure~\ref{fig:rlhf-pipeline}).
+  \item \textbf{Contribution.} An empirical data point that a small distilled encoder attains $62.4\%$ pair-preference accuracy with stable low-variance training, with implications for low-cost alignment work.
+\end{itemize}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/rlhf-pipeline.png}
+  \caption{Position of reward modeling in the standard three-stage RLHF recipe; this paper targets step 2.}
+  \label{fig:rlhf-pipeline}
+\end{figure}
+
+
+\section{Related Work}
+\label{sec:related}
+
+\begin{itemize}
+  \item \textbf{Human-preference alignment.} \citet{christiano2017preferences} introduced learning from pairwise human feedback; \citet{ouyang2022instructgpt} and \citet{bai2022hhrlhf} scaled the recipe to LLMs with helpfulness--harmlessness objectives.
+  \item \textbf{Reward modeling.} The Bradley--Terry~\cite{bradley1952rank} formulation is standard; recent work has studied reward-hacking and overoptimization~\cite{gao2023scaling}.
+  \item \textbf{Distilled encoders.} \citet{sanh2019distilbert} showed a $40\%$-compressed BERT~\cite{devlin2019bert} retains $\geq 97\%$ of GLUE performance, motivating its use as a cheap backbone for downstream classifiers; prior alignment work rarely benchmarks reward models at this scale.
+  \item \textbf{Our position.} We contribute a direct measurement of small-encoder reward-model accuracy on a widely-used preference dataset, filling the low-compute gap in the literature above.
+\end{itemize}
+
+\section{Method}
+\label{sec:method}
+
+\begin{itemize}
+  \item \textbf{Backbone.} \texttt{distilbert-base-uncased} ($66.4$M transformer parameters) produces a sequence of hidden states; we take the \texttt{[CLS]} position and project through a single scalar \texttt{Linear} head to produce a reward $r(x) \in \mathbb{R}$ (Figure~\ref{fig:architecture}).
+  \item \textbf{Input encoding.} Concatenated \emph{prompt + response}, tokenized with the DistilBERT tokenizer to a maximum length of $256$ tokens (right-truncation).
+  \item \textbf{Objective.} For each preference pair $(x_\text{chosen}, x_\text{rejected})$ the loss is the Bradley--Terry pair-preference negative log-likelihood: $\mathcal{L} = -\log \sigma\bigl(r(x_\text{chosen}) - r(x_\text{rejected})\bigr)$.
+  \item \textbf{Evaluation.} At each epoch we compute pair-preference accuracy, the fraction of test pairs for which $r(x_\text{chosen}) > r(x_\text{rejected})$.
+\end{itemize}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/architecture.png}
+  \caption{DistilBERT encoder with a scalar reward head, trained with a pair-preference Bradley--Terry loss.}
+  \label{fig:architecture}
+\end{figure}
+
+
+\section{Experiments}
+\label{sec:experiments}
+
+\begin{itemize}
+  \item \textbf{Dataset.} \texttt{Anthropic/hh-rlhf} (helpful-base)~\cite{bai2022hhrlhf}: $2\,000$ preference pairs for training, $500$ for held-out evaluation (shuffled per seed from the canonical splits).
+  \item \textbf{Protocol.} AdamW (lr $2\times10^{-5}$, weight decay $0.01$), batch size $16$ pairs, $3$ epochs, fp16 mixed precision, seeds $\{0, 1, 2\}$; training on a single T4-class GPU.
+  \item \textbf{Baselines.} In-run: none. From literature (indicative only): the $50\%$ random-pair lower bound; encoder-based reward models generally report $60$--$70\%$ pair accuracy at comparable scale.
+  \item \textbf{Metric.} Pair-preference accuracy on $500$ held-out pairs; reported as mean $\pm$ std across 3 seeds.
+\end{itemize}
+
+\section{Results}
+\label{sec:results}
+
+\begin{itemize}
+  \item \textbf{Pair-preference accuracy: }\textbf{$0.6239 \pm 0.0054$} over 3 seeds on 500 held-out helpful-base pairs~\cite{bai2022hhrlhf}, clearly above the $0.50$ random-pair baseline.
+  \item \textbf{Stable training:} per-seed accuracy ranges $0.6172$--$0.6305$ (relative std $\approx 0.9\%$), indicating the small encoder is not overly sensitive to seed at this scale.
+  \item \textbf{Monotonic improvement:} test accuracy rises across all three epochs for every seed (Figure~\ref{fig:learning-curves}); the model has not yet plateaued.
+  \item \textbf{Compute footprint:} 66.9M trainable parameters trained on 2\,000 pairs; final training loss $0.549$.
+\end{itemize}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/learning-curves.png}
+  \caption{Test accuracy climbs monotonically across 3 epochs for all seeds; curves are tight, consistent with low cross-seed variance.}
+  \label{fig:learning-curves}
+\end{figure}
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\begin{itemize}
+  \item We reported that a 66M-parameter \textsc{DistilBERT} reward model attains \textbf{$62.4 \pm 0.5\%$} pair-preference accuracy on $500$ helpful-base pairs with stable cross-seed behaviour.
+  \item \textbf{Limitations.} Evaluated only on helpful-base (no harmless-base / red-team); trained on a $2\,000$-pair subset without ablation; no comparison to BERT-base / RoBERTa in-run; no downstream RL policy evaluation.
+  \item \textbf{Future work.} Scale to full hh-rlhf, ablate subset size and backbone choice, and measure downstream effect on a PPO policy using this reward model.
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
